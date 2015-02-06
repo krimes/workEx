@@ -2,23 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@+id/lstItemTask"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <TextView
+        android:id="@+id/NotesText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#b4000000"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="fill"
+        android:textSize="20dp" />
+    <TextView
         android:id="@+id/NameText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
         android:layout_marginBottom="3.3dp"
         android:layout_marginLeft="14.2dp"
-        android:layout_marginRight="14.2dp" />
-    <TextView
-        android:id="@+id/NotesText"
-        android:layout_width="74.7dp"
-        android:layout_height="20.7dp"
-        android:text="TextView"
-        android:layout_marginBottom="4dp"
-        android:scaleY="1.5"
-        android:layout_marginLeft="14.2dp"
-        android:layout_marginRight="14.2dp" />
+        android:layout_marginRight="14.2dp"
+        android:layout_marginTop="2dp"
+        android:textColor="#ff313131" />
 </LinearLayout>

@@ -38,6 +38,7 @@ namespace WorkEX
 		const int ActionAddBid = 2;
 		const int ActionListBid = 3;
 		const int ActionDeleteBid = 4;
+		static JSONArray Catalog;
 
 		public static string[] ResultFinal;
 
@@ -105,11 +106,12 @@ namespace WorkEX
 
 		public static List<string> GetCatalog ()
 		{
-			var JSON = new JSONArray (Get (ActionGetCatalog));
+			Catalog = new JSONArray (Get (ActionGetCatalog));
+
 			var l_name_try = new List<string> ();
 			try {
-				for (int i = 0; i < JSON.Length (); i++) {
-					JSONObject Cate = JSON.GetJSONObject (i);
+				for (int i = 0; i < Catalog.Length (); i++) {
+					JSONObject Cate = Catalog.GetJSONObject (i);
 					String name = Cate.GetString ("cate_name");
 					var parent_id = Cate.GetInt ("parent_cate");
 					if (parent_id == 0) {
@@ -124,10 +126,13 @@ namespace WorkEX
 
 		public static int GetCatalogId (string catname)
 		{
-			var JSON = new JSONArray (Get (ActionGetCatalog));
+
+			if (Catalog.IsNull (0)) {
+				Catalog = new JSONArray (Get (ActionGetCatalog));
+			}
 			try {
-				for (int i = 0; i < JSON.Length (); i++) {
-					JSONObject Cate = JSON.GetJSONObject (i);
+				for (int i = 0; i < Catalog.Length (); i++) {
+					JSONObject Cate = Catalog.GetJSONObject (i);
 					String name = Cate.GetString ("cate_name");
 					if (name == catname) {
 						return Cate.GetInt ("cate_id");
@@ -137,6 +142,26 @@ namespace WorkEX
 
 			}
 			return 0;
+		}
+
+		public static string GetCatalogText (int id)
+		{
+
+			if (Catalog.IsNull (0)) {
+				Catalog = new JSONArray (Get (ActionGetCatalog));
+			}
+			try {
+				for (int i = 0; i < Catalog.Length (); i++) {
+					JSONObject Cate = Catalog.GetJSONObject (i);
+					int name = Cate.GetInt ("cate_id");
+					if (name == id) {
+						return Cate.GetString ("cate_name");
+					}
+				}
+			} finally {
+
+			}
+			return "";
 		}
 
 		public static bool AddBidsByUserId (int idcat, string title, string text, string adress, string tel, string name_user)
@@ -167,7 +192,7 @@ namespace WorkEX
 			{
 			var JSON = new JSONArray (Get (ActionListBid));
 			try {
-					for (int i = JSON.Length ()-1; i >= 0; i--) {
+					for (int i = 0; i <JSON.Length (); i++) {
 						JSONObject Cate = JSON.GetJSONObject (i);
 						String date = Cate.GetString ("date_on");
 						var tempList = new ListBids ();

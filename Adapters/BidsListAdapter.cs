@@ -37,13 +37,45 @@ namespace WorkEX.Adapters
 			// gives us some performance gains by not always inflating a new view
 			// will sound familiar to MonoTouch developers with UITableViewCell.DequeueReusableCell()
 			var view = (convertView ??
-			           context.LayoutInflater.Inflate ( Resource.Layout.listBids, parent, false)) as LinearLayout;
+				context.LayoutInflater.Inflate ( Resource.Layout.listBids, parent, false)) as LinearLayout;
 
 			// Find references to each subview in the list item's view
+			var lay = view.FindViewById<LinearLayout> (Resource.Id.lstItemTask);
 			var txtName = view.FindViewById<TextView> (Resource.Id.NameText);
 			var txtDescription = view.FindViewById<TextView> (Resource.Id.NotesText);
 
 			//Assign item's values to the various subviews
+			string SelecterColor="#FFFFFF";
+			switch (item.Status) {
+			case "0":
+				{
+					SelecterColor = "#FDFCBB";
+					break;
+				}
+			case "01":
+				{
+					SelecterColor = "#FDFCBB";
+					break;
+				}
+			case "10":
+				{
+					SelecterColor = "#C5F7C1";
+					break;
+				}
+			case "20":
+				{
+					SelecterColor = "#C20004";
+					break;
+				}
+			case "30":
+				{
+					SelecterColor = "#5A5A5A";
+					break;
+				}
+			default:
+				break;
+			}
+			lay.SetBackgroundColor(Android.Graphics.Color.ParseColor (SelecterColor));
 			txtName.SetText (item.Date, TextView.BufferType.Normal);
 			txtDescription.SetText (item.Title, TextView.BufferType.Normal);
 

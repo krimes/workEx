@@ -140,8 +140,9 @@ namespace WorkEX
 			button = FindViewById<Button> (Resource.Id.myButton);
 			prgBarMain = FindViewById<ProgressBar> (Resource.Id.progressBarMain);
 			taskListView = FindViewById<ListView> (Resource.Id.listView1);
-
-			new GetUserIdTask (this).Execute ();
+			//if (UserId.Equals("")) {
+				new GetUserIdTask (this).Execute ();
+			//}
 			if (button != null) {
 				button.Click += (object sender, EventArgs e) => {
 					if (ListCatalog == null) {
