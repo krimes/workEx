@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.1.4" package="com.workex.alfatest" android:versionCode="6">
+	<uses-sdk android:minSdkVersion="11" />
+	<application android:label="WorkEX" android:icon="@drawable/icon"></application>
+	<uses-permission android:name="android.permission.INTERNET" />
+</manifest>
