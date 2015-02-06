@@ -7,7 +7,7 @@ using Android.Widget;
 
 namespace WorkEX
 {
-	[Activity (Label = "Оставить заявку")]			
+	[Activity (Label = "Оставить заявку", NoHistory = true)]			
 	public class ActivityAddBids : Activity
 	{
 		EditText editText1;

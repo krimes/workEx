@@ -37,6 +37,7 @@ namespace WorkEX
 		const int ActionGetCatalog = 1;
 		const int ActionAddBid = 2;
 		const int ActionListBid = 3;
+		const int ActionDeleteBid = 4;
 
 		public static string[] ResultFinal;
 
@@ -72,7 +73,10 @@ namespace WorkEX
 				{
 					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=all-my-bids", WorkEX.MainActivity.UserId));
 				}
-
+			case ActionDeleteBid: //Delete Bid
+				{
+					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=delete-bids&bids_id={1}", WorkEX.MainActivity.UserId, prop1.Prop1));
+				}
 			default:
 				{
 					return null;
@@ -148,6 +152,14 @@ namespace WorkEX
 			return Equals(JSON,"done");
 		}
 
+		public static bool DeleteBidsByUserId (int id)
+		{
+			prop1 = new GetProp ();
+			prop1.Prop1 = id.ToString();
+			var JSON = Get (ActionDeleteBid);
+			return Equals(JSON,"done");
+		}
+
 		public static IList<ListBids> ShowBidsByUserId ()
 		{
 			IList<ListBids> listBids1 = new List<ListBids> ();
@@ -156,13 +168,14 @@ namespace WorkEX
 			var JSON = new JSONArray (Get (ActionListBid));
 			try {
 					for (int i = JSON.Length ()-1; i >= 0; i--) {
-					JSONObject Cate = JSON.GetJSONObject (i);
-					String date = Cate.GetString ("date_on");
-					var tempList = new ListBids ();
-					tempList.Date = Cate.GetString ("date_on");
-					tempList.Text = Cate.GetString ("title");
-					listBids1.Add (tempList);
-				}
+						JSONObject Cate = JSON.GetJSONObject (i);
+						String date = Cate.GetString ("date_on");
+						var tempList = new ListBids ();
+						tempList.ID = Cate.GetInt ("bids_id");
+						tempList.Date = Cate.GetString ("date_on");
+						tempList.Text = Cate.GetString ("title");
+						listBids1.Add (tempList);
+					}
 				} catch {
 					var temp1 = new ListBids ();
 					temp1.Date = DateTime.Now.ToLongDateString();
@@ -174,7 +187,6 @@ namespace WorkEX
 				temp1.Date = DateTime.Now.ToLongDateString();
 				temp1.Text = "Список пуст";
 				listBids1.Add(temp1);
-
 			}
 
 			return listBids1;

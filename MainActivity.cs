@@ -9,6 +9,7 @@ using Android.Widget;
 using Android.OS;
 using System.Collections.Generic;
 using Android.Views.Animations;
+using System.Threading.Tasks;
 
 
 
@@ -18,11 +19,12 @@ namespace WorkEX
 	[Activity (Label = "WorkEX", Icon = "@drawable/icon")]
 	public class MainActivity : Activity
 	{
-//		Adapters.BidsListAdapter taskList;
-//		IList<ListBids> tasks;
+		Adapters.BidsListAdapter taskList;
+		IList<ListBids> tasks;
 		ListView taskListView;
 		ProgressBar prgBarMain;
 		Button button;
+		int listMainId;
 
 		public static string UserId = "";
 		public List<string> ListCatalog;
@@ -32,14 +34,16 @@ namespace WorkEX
 			private ListView List1;
 			AlphaAnimation inAnimation;
 			AlphaAnimation outAnimation;
-			Adapters.BidsListAdapter taskList;
-			IList<ListBids> tasks;
+//			IList<ListBids> Intasks;
+//			Adapters.BidsListAdapter IntaskList;
+
+
 			public UpdateMainTask(MainActivity a)
 			{
 				_Main = a;
 				List1 = _Main.taskListView;
-//				taskList = _Main.taskList;
-//				tasks = _Main.tasks;
+//				IntaskList = _Main.taskList;
+//				Intasks = _Main.tasks;
 			}
 
 
@@ -63,13 +67,13 @@ namespace WorkEX
 
 			protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params) {
 				try {
-					tasks = new List<ListBids>();
-					tasks = WorkEX.GetJSON.ShowBidsByUserId ();
-					taskList = new Adapters.BidsListAdapter(_Main, tasks);
+					_Main.tasks = new List<ListBids>();
+					_Main.tasks = WorkEX.GetJSON.ShowBidsByUserId ();
+					_Main.taskList = new Adapters.BidsListAdapter(_Main, _Main.tasks);
 
 					//Hook up our adapter to our ListView
 					_Main.RunOnUiThread(delegate {
-						_Main.taskListView.Adapter = taskList;
+						_Main.taskListView.Adapter = _Main.taskList;
 					});
 					//List1.Adapter = taskList;
 
@@ -138,16 +142,66 @@ namespace WorkEX
 			taskListView = FindViewById<ListView> (Resource.Id.listView1);
 
 			new GetUserIdTask (this).Execute ();
+			if (button != null) {
+				button.Click += (object sender, EventArgs e) => {
+					if (ListCatalog == null) {
+						ListCatalog = WorkEX.GetJSON.GetCatalog ();
+					}
+					var intent = new Intent (this, typeof(ActivityAddBids));
+					intent.PutStringArrayListExtra ("Cate_List", ListCatalog);
+					StartActivity (intent);
+				};
+			}
+			// wire up task click handler
+			if(taskListView != null) {
+				taskListView.ItemLongClick += (object sender, AdapterView.ItemLongClickEventArgs e) => {
+//					var taskDetails = new Intent (this, typeof (TaskDetailsScreen));
+					listMainId = e.Position;
+//					taskDetails.PutExtra ("TaskID", tasks[e.Position].ID);
+//					StartActivity (taskDetails);
+					//String[] mActionName ={"Посмотреть", "Изменить", "Удалить"};
 
-			button.Click += (object sender, EventArgs e) =>
-			{
-				if (ListCatalog == null) {
-					ListCatalog = WorkEX.GetJSON.GetCatalog ();
-				}
-				var intent = new Intent(this, typeof(ActivityAddBids));
-				intent.PutStringArrayListExtra("Cate_List", ListCatalog);
-				StartActivity(intent);
-			};
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.SetTitle("Выбирите действие"); // заголовок для диалога
+
+					//builder.SetItems(mActionName, (EventHandler<DialogClickEventArgs>)null);
+					builder.SetNegativeButton("Посмотреть",(EventHandler<DialogClickEventArgs>)null);
+					builder.SetNeutralButton("Изменить",(EventHandler<DialogClickEventArgs>)null);
+					builder.SetPositiveButton("Удалить",(EventHandler<DialogClickEventArgs>)null);
+
+
+					var dialog = builder.Create();
+					dialog.Show();
+					//Ищем кнопки
+					var EditBtn = dialog.GetButton((int)DialogButtonType.Neutral);
+					var DeleteBtn = dialog.GetButton((int)DialogButtonType.Positive);
+					var ShowBtn = dialog.GetButton((int)DialogButtonType.Negative);
+					//Назначаем их
+					ShowBtn.Click += (sender2, args) =>
+					{
+						// Don't dismiss dialog.
+						Console.WriteLine("Действие просмотра");
+						dialog.Dismiss();
+					};
+					EditBtn.Click += (sender2, args) =>
+					{
+						// Dismiss dialog.
+						Console.WriteLine("Действие редактирования");
+						dialog.Dismiss();
+					};
+					DeleteBtn.Click += async (sender2, args) => 
+					{
+						dialog.Dismiss();
+						prgBarMain.Visibility = ViewStates.Visible;
+						taskListView.Visibility = ViewStates.Gone;
+						var result =  await Task<bool>.Factory.StartNew(() => GetJSON.DeleteBidsByUserId (tasks [e.Position].ID));
+
+						new UpdateMainTask (this).Execute ();
+
+					};
+
+				};
+			}
 		}
 		protected override void OnResume ()
 		{
