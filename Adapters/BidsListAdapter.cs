@@ -45,7 +45,7 @@ namespace WorkEX.Adapters
 
 			//Assign item's values to the various subviews
 			txtName.SetText (item.Date, TextView.BufferType.Normal);
-			txtDescription.SetText (item.Text, TextView.BufferType.Normal);
+			txtDescription.SetText (item.Title, TextView.BufferType.Normal);
 
 			//Finally return the view
 			return view;

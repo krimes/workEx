@@ -172,20 +172,30 @@ namespace WorkEX
 						String date = Cate.GetString ("date_on");
 						var tempList = new ListBids ();
 						tempList.ID = Cate.GetInt ("bids_id");
+						tempList.CateID = Cate.GetInt ("cate_id");
 						tempList.Date = Cate.GetString ("date_on");
-						tempList.Text = Cate.GetString ("title");
+						tempList.Title = Cate.GetString ("title");
+						tempList.Text = Cate.GetString ("text");
+						tempList.DateUpd = Cate.GetString ("date_upd");
+						tempList.Type = Cate.GetString ("type");
+						tempList.Status = Cate.GetString ("status");
+						tempList.TimeFinish = Cate.GetString ("time_finish");
+						tempList.Rating = Cate.GetString ("rating");
+						tempList.Telefone = Cate.GetString ();
+						tempList.Adress = Cate.GetString();
+						tempList.Name = Cate.GetString();
 						listBids1.Add (tempList);
 					}
 				} catch {
 					var temp1 = new ListBids ();
 					temp1.Date = DateTime.Now.ToLongDateString();
-					temp1.Text = "Ошибка параметров";
+					temp1.Title = "Ошибка параметров";
 					listBids1.Add(temp1);
 				}
 			} catch {
 				var temp1 = new ListBids ();
 				temp1.Date = DateTime.Now.ToLongDateString();
-				temp1.Text = "Список пуст";
+				temp1.Title = "Список пуст";
 				listBids1.Add(temp1);
 			}
 
