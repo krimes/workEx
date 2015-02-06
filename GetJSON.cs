@@ -47,6 +47,7 @@ namespace WorkEX
 			public string Prop3;
 			public string Prop4;
 			public string Prop5;
+			public string Prop6;
 		}
 
 		static GetProp prop1;
@@ -65,7 +66,7 @@ namespace WorkEX
 				}
 			case ActionAddBid: //Add Bid
 				{
-					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=add-bids&title={1}&text={2}&cate_id={3}", WorkEX.MainActivity.UserId, prop1.Prop1, prop1.Prop2, prop1.Prop3));
+					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=add-bids&title={1}&text={2}&cate_id={3}&adress={4}&telephone={5}&name={6}", WorkEX.MainActivity.UserId, prop1.Prop1, prop1.Prop2, prop1.Prop3, prop1.Prop4,prop1.Prop5, prop1.Prop6));
 				}
 			case ActionListBid: //List Bid
 				{
@@ -134,12 +135,15 @@ namespace WorkEX
 			return 0;
 		}
 
-		public static bool AddBidsByUserId (int idcat, string text, string title = "NoTitle")
+		public static bool AddBidsByUserId (int idcat, string title, string text, string adress, string tel, string name_user)
 		{
 			prop1 = new GetProp ();
 			prop1.Prop1 = title;
 			prop1.Prop2 = text;
 			prop1.Prop3 = idcat.ToString ();
+			prop1.Prop4 = adress;
+			prop1.Prop5 = tel;
+			prop1.Prop6 = name_user;
 			var JSON = Get (ActionAddBid);
 			return Equals(JSON,"done");
 		}
@@ -151,7 +155,7 @@ namespace WorkEX
 			{
 			var JSON = new JSONArray (Get (ActionListBid));
 			try {
-				for (int i = 0; i < JSON.Length (); i++) {
+					for (int i = JSON.Length ()-1; i >= 0; i--) {
 					JSONObject Cate = JSON.GetJSONObject (i);
 					String date = Cate.GetString ("date_on");
 					var tempList = new ListBids ();
@@ -172,6 +176,7 @@ namespace WorkEX
 				listBids1.Add(temp1);
 
 			}
+
 			return listBids1;
 		}
 	}

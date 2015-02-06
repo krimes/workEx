@@ -8,10 +8,17 @@
         android:id="@+id/NameText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:layout_marginBottom="3.3dp"
+        android:layout_marginLeft="14.2dp"
+        android:layout_marginRight="14.2dp" />
     <TextView
         android:id="@+id/NotesText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_width="74.7dp"
+        android:layout_height="20.7dp"
+        android:text="TextView"
+        android:layout_marginBottom="4dp"
+        android:scaleY="1.5"
+        android:layout_marginLeft="14.2dp"
+        android:layout_marginRight="14.2dp" />
 </LinearLayout>

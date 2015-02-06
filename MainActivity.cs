@@ -89,14 +89,6 @@ namespace WorkEX
 				_Main = a;
 			}
 				
-			protected override void OnPreExecute() {
-				base.OnPreExecute();
-				inAnimation = new AlphaAnimation(0f, 1f);
-				inAnimation.Duration = 500;
-				_Main.button.Animation  = inAnimation;
-				_Main.button.Visibility = ViewStates.Gone;
-			}
-
 			protected override void OnPostExecute(Java.Lang.Object result) {
 				base.OnPostExecute(result);
 				outAnimation = new AlphaAnimation(1f, 0f);
