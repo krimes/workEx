@@ -181,9 +181,9 @@ namespace WorkEX
 						tempList.Status = Cate.GetString ("status");
 						tempList.TimeFinish = Cate.GetString ("time_finish");
 						tempList.Rating = Cate.GetString ("rating");
-						tempList.Telefone = Cate.GetString ();
-						tempList.Adress = Cate.GetString();
-						tempList.Name = Cate.GetString();
+						tempList.Telefone = Cate.GetString ("telephone");
+						tempList.Adress = Cate.GetString("adress");
+						tempList.Name = Cate.GetString("name");
 						listBids1.Add (tempList);
 					}
 				} catch {
