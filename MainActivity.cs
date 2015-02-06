@@ -22,6 +22,7 @@ namespace WorkEX
 //		IList<ListBids> tasks;
 		ListView taskListView;
 		ProgressBar prgBarMain;
+		Button button;
 
 		public static string UserId = "";
 		public List<string> ListCatalog;
@@ -45,7 +46,7 @@ namespace WorkEX
 			protected override void OnPreExecute() {
 				base.OnPreExecute();
 				inAnimation = new AlphaAnimation(0f, 1f);
-				inAnimation.Duration = 200;
+				inAnimation.Duration = 350;
 				_Main.prgBarMain.Animation  = inAnimation;
 				_Main.taskListView.Visibility = ViewStates.Gone;
 				_Main.prgBarMain.Visibility = ViewStates.Visible;
@@ -54,7 +55,7 @@ namespace WorkEX
 			protected override void OnPostExecute(Java.Lang.Object result) {
 				base.OnPostExecute(result);
 				outAnimation = new AlphaAnimation(1f, 0f);
-				outAnimation.Duration = 200;
+				outAnimation.Duration = 350;
 				_Main.prgBarMain.Animation = outAnimation;
 				_Main.prgBarMain.Visibility = 	ViewStates.Gone;
 				_Main.taskListView.Visibility = ViewStates.Visible;
@@ -79,6 +80,58 @@ namespace WorkEX
 			}
 		}
 
+		private class GetUserIdTask : AsyncTask {
+			private MainActivity _Main;
+			AlphaAnimation inAnimation;
+			AlphaAnimation outAnimation;
+			public GetUserIdTask(MainActivity a)
+			{
+				_Main = a;
+			}
+				
+			protected override void OnPreExecute() {
+				base.OnPreExecute();
+				inAnimation = new AlphaAnimation(0f, 1f);
+				inAnimation.Duration = 500;
+				_Main.button.Animation  = inAnimation;
+				_Main.button.Visibility = ViewStates.Gone;
+			}
+
+			protected override void OnPostExecute(Java.Lang.Object result) {
+				base.OnPostExecute(result);
+				outAnimation = new AlphaAnimation(1f, 0f);
+				outAnimation.Duration = 500;
+				_Main.button.Animation = outAnimation;
+				_Main.button.Visibility = ViewStates.Visible;
+			}
+
+			protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params) {
+				try {
+
+					var props = new Props(); //Хранение настроек
+					props.ReadXml();
+
+					if (props.Fields.UserIDValue.Length>0){
+						UserId = props.Fields.UserIDValue;
+					}else{
+						UserId = WorkEX.GetJSON.GetUserId ();
+						props.Fields.UserIDValue = UserId;
+						props.WriteXml();
+					}
+
+					//Hook up our adapter to our ListView
+					_Main.RunOnUiThread(delegate {
+						new UpdateMainTask (_Main).Execute ();
+					});
+
+				} catch {
+				}
+
+				return null;
+			}
+		}
+
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -88,50 +141,17 @@ namespace WorkEX
 
 			// Get our button from the layout resource,
 			// and attach an event to it
-			Button button = FindViewById<Button> (Resource.Id.myButton);
-//			Button buttonAddBid = FindViewById<Button> (Resource.Id.btnAddBids);
-//			EditText editText1 = FindViewById<EditText> (Resource.Id.editText1);
-
-			TextView userIdTest = FindViewById<TextView> (Resource.Id.userIdTest);
-
-			TextView TextView1 = FindViewById<TextView> (Resource.Id.textView1);
-			TextView textReq = FindViewById<TextView> (Resource.Id.textRequest);
-
+			button = FindViewById<Button> (Resource.Id.myButton);
 			prgBarMain = FindViewById<ProgressBar> (Resource.Id.progressBarMain);
-
 			taskListView = FindViewById<ListView> (Resource.Id.listView1);
-			/*
-			button.Click += delegate {
-				button.Text = string.Format ("{0} clicks!", count++);
-			};*/
-			var props = new Props(); //Хранение настроек
-			props.ReadXml();
 
-//			string test;
-//			test = WorkEX.GetJSON.GetUserId ();
-
-			if (props.Fields.UserIDValue.Length>0){
-				UserId = props.Fields.UserIDValue;
-			}else{
-				textReq.Text = WorkEX.GetJSON.GetUserId();
-
-				UserId = WorkEX.GetJSON.GetUserId ();
-				textReq.Text = UserId;
-				props.Fields.UserIDValue = UserId;
-				props.WriteXml();
-			}
-
-			userIdTest.Text = string.Format("My id={0}",UserId);
-
-			// Show List Tickets
-//			WorkEX.MainActivity.updateListBids (TextView1);
+			new GetUserIdTask (this).Execute ();
 
 			button.Click += (object sender, EventArgs e) =>
 			{
 				if (ListCatalog == null) {
 					ListCatalog = WorkEX.GetJSON.GetCatalog ();
 				}
-
 				var intent = new Intent(this, typeof(ActivityAddBids));
 				intent.PutStringArrayListExtra("Cate_List", ListCatalog);
 				StartActivity(intent);
@@ -140,7 +160,9 @@ namespace WorkEX
 		protected override void OnResume ()
 		{
 			base.OnResume ();
-			new UpdateMainTask (this).Execute ();
+			if (UserId != "") {
+				new UpdateMainTask (this).Execute ();
+			}
 		}
 	}
 }

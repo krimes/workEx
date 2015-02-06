@@ -84,8 +84,8 @@ namespace WorkEX
 			// aapt resource value: 0x7f060000
 			public const int linearLayout3 = 2131099648;
 			
-			// aapt resource value: 0x7f06000e
-			public const int listView1 = 2131099662;
+			// aapt resource value: 0x7f06000c
+			public const int listView1 = 2131099660;
 			
 			// aapt resource value: 0x7f060007
 			public const int lstItemTask = 2131099655;
@@ -93,20 +93,14 @@ namespace WorkEX
 			// aapt resource value: 0x7f06000a
 			public const int myButton = 2131099658;
 			
-			// aapt resource value: 0x7f06000d
-			public const int progressBarMain = 2131099661;
+			// aapt resource value: 0x7f06000b
+			public const int progressBarMain = 2131099659;
 			
 			// aapt resource value: 0x7f060004
 			public const int spinner1 = 2131099652;
 			
-			// aapt resource value: 0x7f06000c
-			public const int textRequest = 2131099660;
-			
 			// aapt resource value: 0x7f060002
 			public const int textView1 = 2131099650;
-			
-			// aapt resource value: 0x7f06000b
-			public const int userIdTest = 2131099659;
 			
 			static Id()
 			{
