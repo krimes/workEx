@@ -86,7 +86,7 @@ namespace WorkEX
 
 		private class GetUserIdTask : AsyncTask {
 			private MainActivity _Main;
-			AlphaAnimation inAnimation;
+//			AlphaAnimation inAnimation;
 			AlphaAnimation outAnimation;
 			public GetUserIdTask(MainActivity a)
 			{

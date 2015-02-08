@@ -120,6 +120,9 @@ namespace WorkEX
 			// aapt resource value: 0x7f060008
 			public const int textView2 = 2131099656;
 			
+			// aapt resource value: 0x7f060013
+			public const int webView1 = 2131099667;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -141,6 +144,9 @@ namespace WorkEX
 			
 			// aapt resource value: 0x7f030002
 			public const int Main = 2130903042;
+			
+			// aapt resource value: 0x7f030003
+			public const int splash = 2130903043;
 			
 			static Layout()
 			{

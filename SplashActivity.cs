@@ -23,18 +23,41 @@
 
 using Android.App;
 using Android.OS;
+using Android.Webkit;
+using System.Timers;
 
 namespace WorkEX
 {
-	[Activity(Theme = "@style/Theme.Splash", MainLauncher = true, NoHistory = true)]			
+//	[Activity(Theme = "@style/Theme.Splash", MainLauncher = true, NoHistory = true)]			
+	[Activity(Theme = "@android:style/Theme.Black.NoTitleBar.Fullscreen", MainLauncher = true, NoHistory = true)]			
 	public class SplashActivity : Activity
 	{
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+			SetContentView (Resource.Layout.splash);
+			WebView web1 = FindViewById<WebView> (Resource.Id.webView1);
+			WebSettings webSettings = web1.Settings;
+			webSettings.JavaScriptEnabled = true;
+			web1.LoadUrl("file:///android_asset/index.html");
+			//web1.LoadUrl("http://codepen.io/squrler/full/WbXxjx/");
 
+		}
+		protected override void OnResume ()
+		{
+			base.OnResume ();
+
+			Timer tmrShow;
+			tmrShow = new Timer();
+			tmrShow.Interval =5000;
+			tmrShow.Enabled = true;
+			tmrShow.Elapsed += (object sender, ElapsedEventArgs e) => {
+				StartActivity (typeof(MainActivity));
+				tmrShow.Enabled = false;
+			};
+			//Thread.Sleep (1000);
 			// Create your application here
-			StartActivity(typeof(MainActivity));
+			//StartActivity (typeof(MainActivity));
 		}
 	}
 }
