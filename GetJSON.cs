@@ -38,6 +38,7 @@ namespace WorkEX
 		const int ActionAddBid = 2;
 		const int ActionListBid = 3;
 		const int ActionDeleteBid = 4;
+		const int ActionUpdateBid = 5;
 		static JSONArray Catalog;
 
 		public static string[] ResultFinal;
@@ -50,6 +51,7 @@ namespace WorkEX
 			public string Prop4;
 			public string Prop5;
 			public string Prop6;
+			public string Prop7;
 		}
 
 		static GetProp prop1;
@@ -69,6 +71,10 @@ namespace WorkEX
 			case ActionAddBid: //Add Bid
 				{
 					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=add-bids&title={1}&text={2}&cate_id={3}&adress={4}&telephone={5}&name={6}", WorkEX.MainActivity.UserId, prop1.Prop1, prop1.Prop2, prop1.Prop3, prop1.Prop4,prop1.Prop5, prop1.Prop6));
+				}
+			case ActionUpdateBid: //Add Bid
+				{
+					return GetRequest (String.Format ("http://funtea.ru/api.php?uid={0}&action=edit-bids&title={1}&text={2}&cate_id={3}&adress={4}&telephone={5}&name={6}&tag=all&bids_id={7}", WorkEX.MainActivity.UserId, prop1.Prop1, prop1.Prop2, prop1.Prop3, prop1.Prop4,prop1.Prop5, prop1.Prop6, prop1.Prop7));
 				}
 			case ActionListBid: //List Bid
 				{
@@ -164,7 +170,7 @@ namespace WorkEX
 			return "";
 		}
 
-		public static bool AddBidsByUserId (int idcat, string title, string text, string adress, string tel, string name_user)
+		public static bool AddBidsByUserId (int idcat, string title, string text, string adress, string tel, string nameUser)
 		{
 			prop1 = new GetProp ();
 			prop1.Prop1 = title;
@@ -172,8 +178,22 @@ namespace WorkEX
 			prop1.Prop3 = idcat.ToString ();
 			prop1.Prop4 = adress;
 			prop1.Prop5 = tel;
-			prop1.Prop6 = name_user;
+			prop1.Prop6 = nameUser;
 			var JSON = Get (ActionAddBid);
+			return Equals(JSON,"done");
+		}
+
+		public static bool UpdateBidsByUserId (int taskID, int idcat, string title, string text, string adress, string tel, string nameUser)
+		{
+			prop1 = new GetProp ();
+			prop1.Prop1 = title;
+			prop1.Prop2 = text;
+			prop1.Prop3 = idcat.ToString ();
+			prop1.Prop4 = adress;
+			prop1.Prop5 = tel;
+			prop1.Prop6 = nameUser;
+			prop1.Prop7 = taskID.ToString ();
+			var JSON = Get (ActionUpdateBid);
 			return Equals(JSON,"done");
 		}
 

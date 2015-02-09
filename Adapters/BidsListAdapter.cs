@@ -52,7 +52,7 @@ namespace WorkEX.Adapters
 					SelecterColor = "#FDFCBB";
 					break;
 				}
-			case "01":
+			case "1":
 				{
 					SelecterColor = "#FDFCBB";
 					break;
@@ -75,7 +75,10 @@ namespace WorkEX.Adapters
 			default:
 				break;
 			}
-			lay.SetBackgroundColor(Android.Graphics.Color.ParseColor (SelecterColor));
+			var color1 = Android.Graphics.Color.ParseColor (SelecterColor);
+			color1.A = 160;
+			lay.SetBackgroundColor(color1);
+			//lay.SetBackgroundColor(Android.Graphics.Color.Argb(100,111,222,111));
 			txtName.SetText (item.Date, TextView.BufferType.Normal);
 			txtDescription.SetText (item.Title, TextView.BufferType.Normal);
 

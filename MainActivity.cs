@@ -20,7 +20,7 @@ namespace WorkEX
 	public class MainActivity : Activity
 	{
 		Adapters.BidsListAdapter taskList;
-		IList<ListBids> tasks;
+		public static IList<ListBids> tasks;
 		ListView taskListView;
 		ProgressBar prgBarMain;
 		Button button;
@@ -67,9 +67,9 @@ namespace WorkEX
 
 			protected override Java.Lang.Object DoInBackground(params Java.Lang.Object[] @params) {
 				try {
-					_Main.tasks = new List<ListBids>();
-					_Main.tasks = WorkEX.GetJSON.ShowBidsByUserId ();
-					_Main.taskList = new Adapters.BidsListAdapter(_Main, _Main.tasks);
+					tasks = new List<ListBids>();
+					tasks = WorkEX.GetJSON.ShowBidsByUserId ();
+					_Main.taskList = new Adapters.BidsListAdapter(_Main, tasks);
 
 					//Hook up our adapter to our ListView
 					_Main.RunOnUiThread(delegate {
@@ -127,6 +127,32 @@ namespace WorkEX
 			}
 		}
 
+		public override bool OnCreateOptionsMenu(IMenu menu) {
+			MenuInflater inflater = this.MenuInflater;
+			inflater.Inflate(Resource.Menu.MainMenu, menu);
+			return true;
+		}
+
+		public override bool OnOptionsItemSelected(IMenuItem item) {
+			// Handle item selection
+			switch (item.ItemId) {
+			case Resource.Id.menu_add:
+				onAddBids();
+				return true;
+			default:
+				return OnOptionsItemSelected(item);
+			}
+		}
+
+		void onAddBids()
+		{
+			if (ListCatalog == null) {
+				ListCatalog = WorkEX.GetJSON.GetCatalog ();
+			}
+			var intent = new Intent (this, typeof(ActivityAddBids));
+			intent.PutStringArrayListExtra ("Cate_List", ListCatalog);
+			StartActivity (intent);
+		}
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -134,6 +160,10 @@ namespace WorkEX
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
+
+
+			ActionBar actionBar = this.ActionBar;
+			actionBar.Show();
 
 			// Get our button from the layout resource,
 			// and attach an event to it
@@ -145,12 +175,7 @@ namespace WorkEX
 			//}
 			if (button != null) {
 				button.Click += (object sender, EventArgs e) => {
-					if (ListCatalog == null) {
-						ListCatalog = WorkEX.GetJSON.GetCatalog ();
-					}
-					var intent = new Intent (this, typeof(ActivityAddBids));
-					intent.PutStringArrayListExtra ("Cate_List", ListCatalog);
-					StartActivity (intent);
+					onAddBids();
 				};
 			}
 			// wire up task click handler
@@ -188,7 +213,15 @@ namespace WorkEX
 					{
 						// Dismiss dialog.
 						Console.WriteLine("Действие редактирования");
+						var taskDetails = new Intent (this, typeof (ActivityAddBids));
+						taskDetails.PutExtra ("TaskID", listMainId);
+						if (ListCatalog == null) {
+							ListCatalog = WorkEX.GetJSON.GetCatalog ();
+						}
+						taskDetails.PutStringArrayListExtra ("Cate_List", ListCatalog);
+						//taskDetails.PutStringArrayListExtra ("L", (IList<string>)tasks [listMainId]);
 						dialog.Dismiss();
+						StartActivity (taskDetails);
 					};
 					DeleteBtn.Click += async (sender2, args) => 
 					{
